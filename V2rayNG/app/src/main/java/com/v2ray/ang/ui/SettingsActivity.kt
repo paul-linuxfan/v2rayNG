@@ -205,8 +205,8 @@ class SettingsActivity : BaseActivity() {
             vpnDns?.summary = MmkvManager.decodeSettingsString(AppConfig.PREF_VPN_DNS, AppConfig.DNS_VPN)
             vpnMtu?.summary = MmkvManager.decodeSettingsString(AppConfig.PREF_VPN_MTU, AppConfig.VPN_MTU.toString())
 
-            updateMux(MmkvManager.decodeSettingsBool(AppConfig.PREF_MUX_ENABLED, false))
-            mux?.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_MUX_ENABLED, false)
+            updateMux(MmkvManager.decodeSettingsBool(AppConfig.PREF_MUX_ENABLED, true))
+            mux?.isChecked = MmkvManager.decodeSettingsBool(AppConfig.PREF_MUX_ENABLED, true)
             muxConcurrency?.summary = MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_CONCURRENCY, "8")
             muxXudpConcurrency?.summary = MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_XUDP_CONCURRENCY, "8")
 
@@ -269,12 +269,13 @@ class SettingsActivity : BaseActivity() {
                 AppConfig.PREF_DOUBLE_COLUMN_DISPLAY,
                 AppConfig.PREF_PREFER_IPV6,
                 AppConfig.PREF_PROXY_SHARING,
-                AppConfig.PREF_ALLOW_INSECURE,
                 AppConfig.PREF_USE_HEV_TUNNEL
             ).forEach { key ->
                 findPreference<CheckBoxPreference>(key)?.isChecked =
                     MmkvManager.decodeSettingsBool(key, false)
             }
+            findPreference<CheckBoxPreference>(AppConfig.PREF_ALLOW_INSECURE)?.isChecked =
+                    MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, true)
 
             listOf(
                 AppConfig.PREF_VPN_BYPASS_LAN,
