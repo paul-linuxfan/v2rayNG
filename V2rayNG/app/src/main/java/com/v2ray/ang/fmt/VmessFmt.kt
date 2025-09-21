@@ -6,6 +6,7 @@ import com.v2ray.ang.AppConfig
 import com.v2ray.ang.dto.EConfigType
 import com.v2ray.ang.dto.NetworkType
 import com.v2ray.ang.dto.ProfileItem
+import com.v2ray.ang.dto.V2rayConfig
 import com.v2ray.ang.dto.V2rayConfig.OutboundBean
 import com.v2ray.ang.dto.VmessQRCode
 import com.v2ray.ang.extension.idnHost
@@ -28,7 +29,7 @@ object VmessFmt : FmtBase() {
             return parseVmessStd(str)
         }
 
-        var allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, false)
+        val allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, true)
         val config = ProfileItem.create(EConfigType.VMESS)
 
         var result = str.replace(EConfigType.VMESS.protocolScheme, "")
@@ -83,6 +84,8 @@ object VmessFmt : FmtBase() {
         config.sni = vmessQRCode.sni
         config.fingerPrint = vmessQRCode.fp
         config.alpn = vmessQRCode.alpn
+        config.mux = vmessQRCode.mux
+        config.fragment = vmessQRCode.fragment
 
         return config
     }
@@ -144,7 +147,7 @@ object VmessFmt : FmtBase() {
      * @return the parsed ProfileItem object, or null if parsing fails
      */
     fun parseVmessStd(str: String): ProfileItem? {
-        val allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, false)
+        val allowInsecure = MmkvManager.decodeSettingsBool(AppConfig.PREF_ALLOW_INSECURE, true)
         val config = ProfileItem.create(EConfigType.VMESS)
 
         val uri = URI(Utils.fixIllegalUrl(str))
@@ -184,6 +187,36 @@ object VmessFmt : FmtBase() {
 
         outboundBean?.streamSettings?.let {
             V2rayConfigManager.populateTlsSettings(it, profileItem, sni)
+        }
+        
+        // Apply mux settings
+        val defaultMux = MmkvManager.decodeSettingsBool(AppConfig.PREF_MUX_ENABLED, true)
+        if (defaultMux) {
+            outboundBean?.mux?.enabled = true
+            outboundBean?.mux?.concurrency = Utils.parseInt(MmkvManager.decodeSettingsString(AppConfig.PREF_MUX_CONCURRENCY), 8)
+        }
+        if (!profileItem.mux.isNullOrEmpty()) {
+            val concurrency = profileItem.mux?.toIntOrNull()
+            if (concurrency != null && concurrency > 0) {
+                outboundBean?.mux?.enabled = true
+                outboundBean?.mux?.concurrency = concurrency
+            } else {
+                outboundBean?.mux?.enabled = false
+            }
+        }
+
+        // Apply fragment settings
+        if (!profileItem.fragment.isNullOrEmpty()) {
+            try {
+                val fragmentParts = profileItem.fragment!!.split(',')
+                val fragmentBean = V2rayConfig.OutboundBean.OutSettingsBean.FragmentBean()
+                if (fragmentParts.isNotEmpty()) fragmentBean.length = fragmentParts[0]
+                if (fragmentParts.size > 1) fragmentBean.interval = fragmentParts[1]
+                if (fragmentParts.size > 2) fragmentBean.packets = fragmentParts[2]
+                outboundBean?.settings?.fragment = fragmentBean
+            } catch (e: Exception) {
+                // Ignore malformed fragment
+            }
         }
 
         return outboundBean
