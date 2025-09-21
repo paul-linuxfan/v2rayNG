@@ -142,7 +142,8 @@
         <CheckBoxPreference
             android:key="pref_mux_enabled"
             android:summary="@string/summary_pref_mux_enabled"
-            android:title="@string/title_pref_mux_enabled" />
+            android:title="@string/title_pref_mux_enabled"
+            android:defaultValue="true"/>
 
         <EditTextPreference
             android:inputType="number"
@@ -214,7 +215,7 @@
             android:title="@string/title_pref_proxy_sharing_enabled" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="pref_allow_insecure"
             android:summary="@string/summary_pref_allow_insecure"
             android:title="@string/title_pref_allow_insecure" />
