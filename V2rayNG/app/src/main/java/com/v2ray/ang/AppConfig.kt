@@ -110,18 +110,18 @@ object AppConfig {
     const val APP_PRIVACY_POLICY = "$GITHUB_RAW_URL/2dust/v2rayNG/master/CR.md"
     const val APP_PROMOTION_URL = "aHR0cHM6Ly85LjIzNDQ1Ni54eXovYWJjLmh0bWw="
     const val TG_CHANNEL_URL = "https://t.me/github_2dust"
-    const val DELAY_TEST_URL = "https://www.gstatic.com/generate_204"
+    const val DELAY_TEST_URL = "http://www.google.com/generate_204"
     const val DELAY_TEST_URL2 = "https://www.google.com/generate_204"
     const val IP_API_URL = "https://speed.cloudflare.com/meta"
 
     /** DNS server addresses. */
-    const val DNS_PROXY = "1.1.1.1"
+    const val DNS_PROXY = "8.8.8.8"
     const val DNS_DIRECT = "223.5.5.5"
-    const val DNS_VPN = "1.1.1.1"
+    const val DNS_VPN = "8.8.8.8"
     const val GEOSITE_PRIVATE = "geosite:private"
-    const val GEOSITE_CN = "geosite:cn"
+    const val GEOSITE_CN = "geosite:ir"
     const val GEOIP_PRIVATE = "geoip:private"
-    const val GEOIP_CN = "geoip:cn"
+    const val GEOIP_CN = "geoip:ir"
 
     /** Ports and addresses for various services. */
     const val PORT_LOCAL_DNS = "10853"
