@@ -59,6 +59,9 @@ data class ProfileItem(
     var bandwidthDown: String? = null,
     var bandwidthUp: String? = null,
 
+    var mux: String? = null,
+    var fragment: String? = null,
+
     ) {
     companion object {
         fun create(configType: EConfigType): ProfileItem {
