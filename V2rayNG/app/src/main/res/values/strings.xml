@@ -371,8 +371,8 @@
     </string-array>
 
     <string-array name="preset_rulesets">
-        <item>China Whitelist</item>
-        <item>China Blacklist</item>
+        <item>Bypass Iran (Whitelist)</item>
+        <item>Iran Blacklist</item>
         <item>Global</item>
         <item>Iran Whitelist</item>
     </string-array>
