@@ -109,6 +109,29 @@ jobs:
       run: |
         cp -r ${{ github.workspace }}/hysteria/libs ${{ github.workspace }}/V2rayNG/app
 
+    - name: Package compiled libraries
+      run: |
+        mkdir -p ${{ github.workspace }}/release_libs
+        cp -r ${{ github.workspace }}/V2rayNG/app/libs ${{ github.workspace }}/release_libs/
+        cp -r ${{ github.workspace }}/hysteria/libs ${{ github.workspace }}/release_libs/hysteria_libs
+        cd ${{ github.workspace }}
+        zip -r compiled_libs.zip release_libs
+
+    - name: Upload compiled libraries (as workflow artifact)
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: compiled-libs
+        path: ${{ github.workspace }}/compiled_libs.zip
+
+    - name: Upload compiled libraries to release
+      if: github.event.inputs.release_tag != ''
+      uses: svenstaro/upload-release-action@v2
+      with:
+        file: ${{ github.workspace }}/compiled_libs.zip
+        tag: ${{ github.event.inputs.release_tag }}
+        release_name: "Compiled Libraries for ${{ github.event.inputs.release_tag }}"
+        prerelease: true
+
     - name: Setup Java
       uses: actions/setup-java@v4.7.0
       with:
