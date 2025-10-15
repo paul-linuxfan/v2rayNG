@@ -157,3 +157,24 @@ jobs:
         tag: ${{ github.event.inputs.release_tag }}
         file_glob: true
         prerelease: true
+
+    - name: Commit and upload built libraries to master
+      if: ${{ success() }}
+      run: |
+        cd ${{ github.workspace }}
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Copy all compiled libraries to a folder that will be pushed
+        mkdir -p upload_libs
+        cp -r V2rayNG/app/libs/* upload_libs/ || true
+        cp -r libs/* upload_libs/ || true
+        cp -r hysteria/libs/* upload_libs/ || true
+
+        git checkout master
+        mkdir -p libs_uploaded
+        cp -r upload_libs/* libs_uploaded/ || true
+
+        git add libs_uploaded/
+        git commit -m "chore(ci): update built libraries [skip ci]" || echo "No changes to commit"
+        git push origin master
